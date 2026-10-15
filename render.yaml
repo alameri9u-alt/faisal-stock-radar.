@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: faisal-stock-radar
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    healthCheckPath: /health
+    envVars:
+      - key: MASSIVE_API_KEY
+        sync: false
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: RADAR_ADMIN_PASSWORD
+        sync: false
+      - key: DATABASE_PATH
+        value: /var/data/radar.db
+    disk:
+      name: radar-data
+      mountPath: /var/data
+      sizeGB: 1
